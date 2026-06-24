@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | E-Summit 2026</title>
+    <meta name="description" content="Register for E-Summit 2026 to join the ultimate Entrepreneurship Summit.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="registration.css">
+</head>
+<body class="registration-page">
+    <!-- Background Elements -->
+    <div class="bg-gradient-orb orb-1"></div>
+    <div class="bg-gradient-orb orb-2"></div>
+    <div class="bg-noise"></div>
+
+    <nav id="navbar" class="scrolled">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon"></div>
+                E-Summit<span>26</span>
+            </a>
+            <a href="index.html" class="btn btn-outline back-btn">
+                &larr; Back to Home
+            </a>
+        </div>
+    </nav>
+
+    <main class="registration-main">
+        <div class="container form-container-wrapper">
+            <div class="glass form-card animate-fade-in">
+                <div class="form-header">
+                    <h2>Secure Your Spot</h2>
+                    <p>Fill out the details below to register for E-Summit 2026.</p>
+                </div>
+
+                <div id="successMessage" class="success-message hidden">
+                    <div class="success-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" viewBox="0 0 256 256"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm45.66,85.66-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32Z"></path></svg>
+                    </div>
+                    <h3>Registration Successful!</h3>
+                    <p>Thank you for registering for E-Summit 2026. We've sent a confirmation email to you.</p>
+                    <a href="index.html" class="btn btn-primary mt-4">Return Home</a>
+                </div>
+
+                <form id="registrationForm" class="registration-form" novalidate>
+                    <!-- Full Name -->
+                    <div class="form-group">
+                        <label for="fullName">Full Name</label>
+                        <input type="text" id="fullName" name="fullName" placeholder="e.g. John Doe" autocomplete="name">
+                        <span class="error-msg" id="fullNameError"></span>
+                    </div>
+
+                    <!-- Email Address -->
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" placeholder="e.g. john@example.com" autocomplete="email">
+                        <span class="error-msg" id="emailError"></span>
+                    </div>
+
+                    <!-- College Name -->
+                    <div class="form-group">
+                        <label for="college">College Name</label>
+                        <input type="text" id="college" name="college" placeholder="e.g. Stanford University">
+                        <span class="error-msg" id="collegeError"></span>
+                    </div>
+
+                    <!-- Contact Number -->
+                    <div class="form-group">
+                        <label for="contact">Contact Number</label>
+                        <input type="tel" id="contact" name="contact" placeholder="e.g. 9876543210" maxlength="10">
+                        <span class="error-msg" id="contactError"></span>
+                    </div>
+
+                    <!-- Event Selection -->
+                    <div class="form-group">
+                        <label for="eventSelect">Select Event</label>
+                        <div class="custom-select-wrapper">
+                            <select id="eventSelect" name="eventSelect">
+                                <option value="" disabled selected>Choose an event to participate</option>
+                                <option value="startup_pitching">Startup Pitching</option>
+                                <option value="workshop">Workshop</option>
+                                <option value="networking">Networking Session</option>
+                                <option value="competition">Competition</option>
+                            </select>
+                        </div>
+                        <span class="error-msg" id="eventSelectError"></span>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary submit-btn">Complete Registration</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script src="registration.js"></script>
+</body>
+</html>
