@@ -51,13 +51,76 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // --- Dynamic Staggering & Section Animations ---
+    // Stagger delays for grids
+    const gridsToStagger = ['.events-grid', '.team-grid', '.speakers-grid', '.stats-grid', '.gallery-grid'];
+    gridsToStagger.forEach(gridSelector => {
+        const grid = document.querySelector(gridSelector);
+        if (grid) {
+            const items = grid.querySelectorAll('.animate-on-scroll');
+            items.forEach((item, index) => {
+                item.style.transitionDelay = `${index * 0.12}s`;
+            });
+        }
+    });
+
+    // Stagger contact items
+    const contactItems = document.querySelectorAll('.contact-item');
+    contactItems.forEach((item, index) => {
+        item.classList.add('animate-on-scroll', 'slide-up');
+        item.style.transitionDelay = `${index * 0.15}s`;
+    });
+
+    // Alternate section animations
+    const mainSections = document.querySelectorAll('section');
+    mainSections.forEach((section, index) => {
+        const header = section.querySelector('.section-header');
+        if (header) {
+            header.classList.remove('slide-up');
+            if (index % 2 === 0) {
+                header.classList.add('slide-right');
+            } else {
+                header.classList.add('slide-left');
+            }
+        }
+    });
+
+    // Footer animation
+    const footer = document.querySelector('.footer');
+    if (footer) {
+        footer.classList.add('animate-on-scroll', 'fade-in');
+    }
+
+    // --- Button Ripple Effect ---
+    const buttons = document.querySelectorAll('.btn');
+    buttons.forEach(btn => {
+        btn.addEventListener('click', function (e) {
+            let x = e.clientX - e.target.getBoundingClientRect().left;
+            let y = e.clientY - e.target.getBoundingClientRect().top;
+            
+            let ripples = document.createElement('span');
+            ripples.className = 'ripple';
+            ripples.style.left = x + 'px';
+            ripples.style.top = y + 'px';
+            
+            const size = Math.max(btn.offsetWidth, btn.offsetHeight);
+            ripples.style.width = size + 'px';
+            ripples.style.height = size + 'px';
+            
+            this.appendChild(ripples);
+            setTimeout(() => {
+                ripples.remove();
+            }, 600);
+        });
+    });
+
     // --- Scroll Animations (Intersection Observer) ---
     const animationElements = document.querySelectorAll('.animate-on-scroll');
 
     const observerOptions = {
         root: null,
         rootMargin: '0px',
-        threshold: 0.15 // Trigger when 15% of the element is visible
+        threshold: 0.15
     };
 
     const scrollObserver = new IntersectionObserver((entries, observer) => {
@@ -65,7 +128,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('is-visible');
 
-                // If it's a stat card, trigger counter animation
                 if (entry.target.classList.contains('stat-card')) {
                     const counterElement = entry.target.querySelector('.stat-number');
                     if (counterElement && !counterElement.classList.contains('counted')) {
@@ -73,8 +135,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
 
-                // Optional: Stop observing once animated if we only want it to happen once
-                // observer.unobserve(entry.target); 
+                // Trigger animations only once
+                observer.unobserve(entry.target); 
             }
         });
     }, observerOptions);
@@ -83,32 +145,37 @@ document.addEventListener('DOMContentLoaded', () => {
         scrollObserver.observe(el);
     });
 
-    // --- Counter Animation ---
+    // --- Counter Animation (60 FPS RAF) ---
     function animateCounter(counterElement) {
-        counterElement.classList.add('counted'); // Prevent re-triggering
-        const target = +counterElement.getAttribute('data-target');
-        const duration = 2000; // 2 seconds
-        const stepTime = Math.abs(Math.floor(duration / target));
-
-        // For larger numbers, we might need to adjust the step to prevent browser lag
-        let step = 1;
-        let time = stepTime;
-
-        if (target > 500) {
-            step = Math.ceil(target / 100);
-            time = duration / (target / step);
+        counterElement.classList.add('counted');
+        
+        let targetValue = counterElement.getAttribute('data-target');
+        if (!targetValue) {
+            targetValue = counterElement.innerText.replace(/[^0-9]/g, '');
+            counterElement.setAttribute('data-target', targetValue);
         }
-
-        let current = 0;
-
-        const timer = setInterval(() => {
-            current += step;
-            if (current >= target) {
-                current = target;
-                clearInterval(timer);
-            }
+        
+        const target = +targetValue || 0;
+        const duration = 2000;
+        let startTimestamp = null;
+        
+        const step = (timestamp) => {
+            if (!startTimestamp) startTimestamp = timestamp;
+            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+            const easeOutProgress = progress * (2 - progress);
+            
+            const current = Math.floor(easeOutProgress * target);
             counterElement.innerText = current;
-        }, time);
+            
+            if (progress < 1) {
+                window.requestAnimationFrame(step);
+            } else {
+                counterElement.innerText = target;
+            }
+        };
+        
+        counterElement.innerText = '0';
+        window.requestAnimationFrame(step);
     }
 
     // --- Smooth Scrolling for Anchor Links ---
